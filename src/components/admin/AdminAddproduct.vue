@@ -5,15 +5,15 @@ import {
   Save,
   Image as ImageIcon,
 } from "@lucide/vue";
-import { Products } from "../../data/Products";
+import { useProductStore } from "../../stores/products";
 import type { Product } from "../../types/produce";
 
 const router = useRouter();
-
-const STORAGE_KEY = "lumie_admin_products";
+const productStore = useProductStore();
 
 const name = ref("");
 const price = ref<number | null>(null);
+const discount = ref<number | null>(null);
 const category = ref("");
 const showSuccess = ref(false);
 
@@ -60,23 +60,12 @@ function addProduct() {
     return;
   }
 
-  const saved = localStorage.getItem(STORAGE_KEY);
-  let products: Product[] = [];
-  if (saved) {
-    try {
-      products = JSON.parse(saved);
-    } catch {
-      products = [...Products];
-    }
-  } else {
-    products = [...Products];
-  }
-
   const newProduct: Product = {
     id: Date.now(),
     name: name.value.trim(),
     brand: "Lumie Skin",
     price: price.value,
+    discount: discount.value || 0,
     category: category.value as Product["category"],
     description: description.value.trim(),
     rating: 0,
@@ -93,8 +82,7 @@ function addProduct() {
     },
   };
 
-  products.push(newProduct);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  productStore.addProduct(newProduct);
 
   showSuccess.value = true;
 
@@ -159,8 +147,8 @@ function addProduct() {
             />
           </div>
 
-          <!-- PRICE + CATEGORY -->
-          <div class="grid grid-cols-1 mb-6 gap-6 sm:grid-cols-2">
+          <!-- PRICE + DISCOUNT + CATEGORY -->
+          <div class="grid grid-cols-1 mb-6 gap-6 sm:grid-cols-3">
 
             <!-- PRICE -->
             <div>
@@ -187,6 +175,34 @@ function addProduct() {
                   placeholder="15.00"
                   class="py-3 w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] text-sm pl-9 pr-4 outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]"
                 />
+              </div>
+            </div>
+
+            <!-- DISCOUNT -->
+            <div>
+              <label
+                for="discount"
+                class="mb-2 text-sm font-semibold text-[#0F3D2E] block"
+              >
+                Discount (%)
+              </label>
+
+              <div class="relative">
+                <input
+                  id="discount"
+                  v-model="discount"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  placeholder="0"
+                  class="py-3 w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] text-sm pl-4 pr-10 outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]"
+                />
+                <span
+                  class="top-1/2 text-sm text-gray-500 absolute right-4 -translate-y-1/2"
+                >
+                  %
+                </span>
               </div>
             </div>
 

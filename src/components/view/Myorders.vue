@@ -45,8 +45,8 @@
           v-for="tab in tabs"
           :key="tab"
           @click="activeTab = tab"
-          class="px-5 py-2.5 rounded-full text-sm font-medium text-white' whitespace-nowrap transition activeTab === tab ? 'bg-[#0F3D2E] : 'text-gray-500 hover:bg-[#F4F8F1] hover:text-[#0F3D2E]'
-          "
+          class="px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition"
+          :class="activeTab === tab ? 'bg-[#0F3D2E] text-white' : 'text-gray-500 hover:bg-[#F4F8F1] hover:text-[#0F3D2E]'"
         >
           {{ tab }}
         </button>
@@ -165,17 +165,17 @@
               <Package class="h-5 w-5 text-[#7A9E7E]" />
             </div>
 
-            <!-- Progress -->
+<!-- Progress -->
             <div class="relative">
 
               <!-- Background Line -->
               <div
-                class="top-6 bg-[#DCE6DC] absolute left-[12%] right-[12%]"
+                class="absolute top-6 left-[12%] right-[12%] h-1 bg-[#DCE6DC]"
               ></div>
 
               <!-- Active Line -->
               <div
-                class="top-6 bg-[#7A9E7E] absolute left-[12%]"
+                class="absolute top-6 left-[12%] h-1 bg-[#7A9E7E] transition-all duration-300"
                 :style="{ width: `calc(${getProgressWidth(order.status)}% - 12%)` }"
               ></div>
 
@@ -187,10 +187,16 @@
                   :key="step.name"
                   class="flex-1 flex-col flex items-center"
                 >
-                 
+                  
                   <!-- Icon Circle -->
                     <div
-                      class="h-12 w-12 justify-center rounded-full border-2 bg-[#7A9E7E] text-white' text-[#7A9E7E]' text-gray-300' flex items-center transition-all duration-300 getStepState(order.status, step.name) === 'completed' ? 'border-[#7A9E7E] : getStepState(order.status, step.name) === 'current' ? 'border-[#7A9E7E] : 'border-[#DCE6DC]
+                      class="h-12 w-12 justify-center rounded-full border-2 flex items-center transition-all duration-300"
+                      :class="
+                        getStepState(order.status, step.name) === 'completed' 
+                          ? 'bg-[#7A9E7E] border-[#7A9E7E] text-white' 
+                          : getStepState(order.status, step.name) === 'current' 
+                            ? 'border-[#7A9E7E] text-[#7A9E7E] bg-white' 
+                            : 'border-[#DCE6DC] text-gray-300 bg-white'
                       "
                     >
                       <!-- Completed: Check -->

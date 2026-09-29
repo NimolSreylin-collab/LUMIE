@@ -1,4 +1,19 @@
 <template>
+    <Transition
+        enter-active-class="transition ease-out duration-300"
+        enter-from-class="translate-y-4 opacity-0"
+        enter-to-class="translate-y-0 opacity-100"
+        leave-active-class="transition ease-in duration-200"
+        leave-from-class="translate-y-0 opacity-100"
+        leave-to-class="-translate-y-4 opacity-0"
+    >
+        <div
+            v-if="showToast"
+            class="fixed top-6 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-[#0F3D2E] px-6 py-3 text-sm font-medium text-white shadow-lg"
+        >
+            We've sent you a password reset link. Please check your email.
+        </div>
+    </Transition>
     <div
         class="px-6 py-12 min-h-screen justify-center bg-[#F9FBF7] flex items-center"
     >
@@ -52,7 +67,7 @@
 
 
             <!-- Form -->
-            <form action="" class="space-y-6">
+            <form @submit.prevent="sendResetLink" class="space-y-6">
 
                 <!-- Email -->
                 <div>
@@ -65,6 +80,7 @@
                     </label>
 
                     <input
+                        v-model="email"
                         type="email"
                         id="email"
                         placeholder="Enter your email"
@@ -142,8 +158,18 @@ import {
 
 const router = useRouter();
 
+const email = ref("");
 const clickBack = ref(false);
+const showToast = ref(false);
 
+function sendResetLink(): void {
+  showToast.value = true;
+  email.value = "";
+  setTimeout(() => {
+    showToast.value = false;
+    router.push("/login");
+  }, 2000);
+}
 
 function closeReset(): void {
     router.back();

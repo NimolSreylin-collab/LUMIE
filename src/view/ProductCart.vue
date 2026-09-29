@@ -2,11 +2,12 @@
 import { ref, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { Search, SlidersHorizontal, Heart, Star, ShoppingBag } from '@lucide/vue'
-import { Products } from '../data/Products'
+import { useProductStore } from '../stores/products'
 import { useWishlistStore } from '../store/wishlist'
 
 const router = useRouter()
 const wishlistStore = useWishlistStore()
+const productStore = useProductStore()
 
 const categories = [
   "All",
@@ -54,7 +55,7 @@ const sortBy = ref<SortOption>('default')
 const wishlistedIds = computed(() => wishlistStore.items.map(item => item.id))
 
 const processedProducts = computed(() => {
-  let result = Products.filter(p => {
+  let result = productStore.allProducts.filter(p => {
     return activeCategory.value === 'All' || p.category === activeCategory.value
   })
 
@@ -103,7 +104,7 @@ function toggleWishlist(id: number): void {
     router.push("/login");
     return;
   }
-  const product = Products.find((p) => p.id === id);
+  const product = productStore.getProductById(id);
   if (product) {
     wishlistStore.toggleWishlist(product);
   }
@@ -284,9 +285,26 @@ const clearFilters = (): void => {
 
             <!-- Price + CTA -->
             <div class="mt-4 pt-4 justify-between border-t border-[#EAF2E9] flex items-center">
-              <span class="text-xl font-bold text-[#0F3D2E]">
-                ${{ item.price.toFixed(2) }}
-              </span>
+              <div class="flex items-baseline gap-2">
+                <span v-if="item.discount && item.discount > 0" class="text-xl font-bold text-[#0F3D2E]">
+                  ${{ (item.price * (1 - item.discount / 100)).toFixed(2) }}
+                </span>
+                <span v-else class="text-xl font-bold text-[#0F3D2E]">
+                  ${{ item.price.toFixed(2) }}
+                </span>
+                <span
+                  v-if="item.discount && item.discount > 0"
+                  class="text-sm text-gray-400 line-through"
+                >
+                  ${{ item.price.toFixed(2) }}
+                </span>
+                <span
+                  v-if="item.discount && item.discount > 0"
+                  class="px-1.5 py-0.5 rounded-full bg-red-100 text-red-600 text-xs font-semibold"
+                >
+                  -{{ item.discount }}%
+                </span>
+              </div>
 
               <RouterLink
                 :to="`/products/${item.id}`"

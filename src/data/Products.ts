@@ -12,6 +12,7 @@ export const Products: Product[] = [
     reviews: 142,
     badge: "Best Seller",
     tag: "Best Seller",
+    discount: 20,
     images: {
       img1: "https://i.pinimg.com/736x/18/25/72/182572b59c46a3a84e69dadc25a4e7e6.jpg",
       img2: "https://i.pinimg.com/736x/fd/10/5b/fd105bb503156e258456bb93d61b61f1.jpg",
@@ -32,8 +33,9 @@ export const Products: Product[] = [
     price: 9.0,
     rating: 4.8,
     reviews: 98,
-    isNew: true,
+isNew: true,
     badge: "New Arrival",
+    discount: 30,
     images: {
       img1: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=600",
       img2: "https://images.unsplash.com/photo-1556229010-aa3f7ff66b24?auto=format&fit=crop&q=80&w=600",
@@ -64,18 +66,17 @@ export const Products: Product[] = [
     skinType: ["Oily", "Combination", "Acne-Prone"],
     ingredients: ["Heartleaf Extract", "Salicylic Acid", "Tea Tree Extract"],
     benefits: ["Unclogs pores", "Controls excess sebum", "Prevents breakouts", "Deeply purifying"],
-    sizes: ["120ml", "200ml"]
+sizes: ["120ml", "200ml"]
   },
   {
-    id: 4,
-    name: "Medicube Hydrated Serum",
-    brand: "Medicube",
-    category: "Serum",
-    price: 22.0,
-    rating: 4.9,
-    reviews: 210,
-    badge: "Award Winner",
-    tag: "Award Winner",
+    id: 3,
+    name: "Deep Pore Anua Cleansing Foam",
+    brand: "Anua",
+    category: "Foam",
+    price: 10.0,
+    rating: 4.7,
+    reviews: 86,
+    discount: 10,
     images: {
       img1: "https://i.pinimg.com/736x/0f/92/16/0f9216ac2b9b7f97979e7b8dce363440.jpg",
       img2: "https://i.pinimg.com/736x/f4/bd/6d/f4bd6dbb7acff8cca05beb8ecf6dba9f.jpg",
@@ -138,6 +139,7 @@ export const Products: Product[] = [
     price: 18.0,
     rating: 4.8,
     reviews: 112,
+    discount: 12,
     images: {
       img1: "https://i.pinimg.com/736x/f3/c9/af/f3c9afeb47a285cf9e7f8d2d6c6cd4d5.jpg",
       img2: "https://i.pinimg.com/1200x/e8/c4/38/e8c4386645d5c4e8e4b14d22fc87133b.jpg",

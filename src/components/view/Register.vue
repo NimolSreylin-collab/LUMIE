@@ -276,8 +276,11 @@ const register=()=>{
     name:name.value.trim(),
     email:email.value.toLowerCase().trim(),
     password:password.value,
-    role:"user"
-
+    role:"user",
+    phone: "",
+    address: "",
+    city: "",
+    postalCode: ""
   }
   
   users.push(newUser);

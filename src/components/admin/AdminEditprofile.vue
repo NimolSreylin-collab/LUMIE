@@ -7,7 +7,7 @@
         @click="goBack"
         class="mb-5 gap-2 text-sm font-medium text-[#7A9E7E] flex items-center transition hover:text-[#0F3D2E]"
       >
-        <span class="text-lg">←</span>
+        <ArrowLeft class="h-5 w-5" :stroke-width="2" />
         Back to Profile
       </button>
 
@@ -266,7 +266,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { Eye, EyeOff } from "@lucide/vue";
+import { Eye, EyeOff, ArrowLeft } from "@lucide/vue";
 
 const router = useRouter();
 

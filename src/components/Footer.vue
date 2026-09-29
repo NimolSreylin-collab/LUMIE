@@ -1,6 +1,6 @@
 <template>
   <footer class="w-full" style="background-color: #0F3D2E;">
-    <div class="px-6 pt-16 pb-8 max-w-6xl mx-auto">
+    <div class="px-4 pt-16 pb-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <!-- Top: Logo + Newsletter -->
       <div class="flex-col gap-10 pb-12 border-b flex lg:flex-row lg:items-start lg:justify-between" style="border-color: #174A3A;">
         <div class="max-w-sm text-center mx-auto lg:text-left lg:mx-0">

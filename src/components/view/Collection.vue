@@ -70,29 +70,46 @@
           </div>
 
           <!-- Product Info -->
-          <div class="p-5">
+          <div class="p-5 flex flex-col h-[220px]">
 
             <p class="text-xs font-medium text-[#7A9E7E] uppercase tracking-wider">
               {{ product.category }}
             </p>
 
             <h2
-              class="mt-2 text-lg font-semibold text-[#0F3D2E]"
+              class="mt-2 text-lg font-semibold text-[#0F3D2E] line-clamp-2"
             >
               {{ product.name }}
             </h2>
 
-            <p class="mt-2 text-sm text-gray-500 leading-6">
+            <p class="mt-2 text-sm text-gray-500 leading-6 line-clamp-2 flex-1">
               {{ product.description }}
             </p>
 
-            <div class="mt-5 justify-between flex items-center">
-              <span class="text-lg font-bold text-[#0F3D2E]">
-                ${{ product.price }}
-              </span>
+            <div class="mt-5 justify-between flex items-center flex-shrink-0">
+              <div class="flex items-baseline gap-2">
+                <span v-if="hasDiscount(product.discount)" class="text-lg font-bold text-[#0F3D2E]">
+                  ${{ getDiscountedPrice(product.price, product.discount).toFixed(2) }}
+                </span>
+                <span v-else class="text-lg font-bold text-[#0F3D2E]">
+                  ${{ product.price.toFixed(2) }}
+                </span>
+                <span
+                  v-if="hasDiscount(product.discount)"
+                  class="text-sm text-gray-400 line-through"
+                >
+                  ${{ product.price.toFixed(2) }}
+                </span>
+                <span
+                  v-if="hasDiscount(product.discount)"
+                  class="px-1.5 py-0.5 rounded-full bg-red-100 text-red-600 text-xs font-semibold"
+                >
+                  -{{ product.discount }}%
+                </span>
+              </div>
 
-              <button @click="cartStore.addToCart(product)"
-                class="px-4 py-2 rounded-full bg-[#0F3D2E] text-sm font-medium text-white transition hover:bg-[#174A3A]"
+              <button @click="addToCart(product)"
+                class="px-4 py-2 rounded-full bg-[#0F3D2E] text-sm font-medium text-white transition hover:bg-[#174A3A] w-full sm:w-auto"
               >
                 Add to Cart
               </button>
@@ -128,7 +145,6 @@
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-
 import {
   AcneProducts,
   Brighteningproduct,
@@ -141,10 +157,21 @@ import {
 } from "../../data/Product";
 import { useCartStore } from "../../store/Card";
 
-const cartStore=useCartStore()
+const cartStore = useCartStore()
 
 const route = useRoute();
 const router = useRouter();
+
+const getDiscountedPrice = (price: number, discount?: number) => {
+  if (discount && discount > 0) {
+    return price * (1 - discount / 100)
+  }
+  return price
+}
+
+const hasDiscount = (discount?: number) => {
+  return discount && discount > 0
+}
 
 /* ================= CATEGORY ================= */
 
@@ -215,17 +242,38 @@ const collectionName = computed(() => {
     case "serums":
       return "Serums";
 
-    default:
+default:
       return "Collection";
   }
 });
 
+function addToCart(product: any) {
+  let image = '';
+  if (product.images) {
+    if (typeof product.images === 'object' && !Array.isArray(product.images)) {
+      image = product.images.img1 || Object.values(product.images)[0] || '';
+    } else if (Array.isArray(product.images) && product.images.length > 0) {
+      image = product.images[0];
+    }
+  } else if (product.image) {
+    image = product.image;
+  }
 
+  const finalPrice = hasDiscount(product.discount)
+    ? getDiscountedPrice(product.price, product.discount)
+    : product.price
 
-// add to card button
-    
+  const normalizedProduct = {
+    id: product.id,
+    name: product.name,
+    price: finalPrice,
+    category: product.category,
+    description: product.description,
+    image: image,
+    discount: product.discount || 0,
+  };
 
-
-
+  cartStore.addToCart(normalizedProduct);
+}
 
 </script>

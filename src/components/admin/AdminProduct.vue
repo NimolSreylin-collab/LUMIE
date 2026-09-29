@@ -14,30 +14,20 @@ import {
 } from "@lucide/vue";
 
 import type { Product } from "../../types/produce";
-
-import { Products } from "../../data/Products";
+import { useProductStore } from "../../stores/products";
 
 const router = useRouter();
+const productStore = useProductStore();
 
 /* =========================================================
    PRODUCTS
 ========================================================= */
 
-const STORAGE_KEY = "lumie_admin_products";
+const products = ref<Product[]>(productStore.allProducts);
 
-function loadProducts(): Product[] {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [...Products];
-    }
-  }
-  return [...Products];
-}
-
-const products = ref<Product[]>(loadProducts());
+productStore.$subscribe(() => {
+  products.value = productStore.allProducts;
+});
 
 /* =========================================================
    SEARCH & FILTER
@@ -183,10 +173,7 @@ function deleteProduct(product: Product) {
 
   if (!confirmed) return;
 
-  products.value = products.value.filter(
-    (item) => item.id !== product.id
-  );
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products.value));
+  productStore.deleteProduct(product.id);
 }
 </script>
 
@@ -359,7 +346,7 @@ function deleteProduct(product: Product) {
             <!-- Table Header -->
 
             <div
-              class="grid-cols-[70px_1fr_150px_120px_130px] gap-4 px-6 py-4 border-b border-[#DCE6DC] bg-[#F4F8F1] text-xs font-semibold text-gray-600 hidden items-center uppercase tracking-wide md:grid"
+              class="grid-cols-[70px_1fr_150px_100px_120px_130px] gap-4 px-6 py-4 border-b border-[#DCE6DC] bg-[#F4F8F1] text-xs font-semibold text-gray-600 hidden items-center uppercase tracking-wide md:grid"
             >
               <div>
                 #
@@ -371,6 +358,10 @@ function deleteProduct(product: Product) {
 
               <div>
                 Category
+              </div>
+
+              <div>
+                Discount
               </div>
 
               <div>
@@ -409,7 +400,7 @@ function deleteProduct(product: Product) {
             <div
               v-for="product in paginatedProducts"
               :key="product.id"
-              class="grid-cols-[70px_1fr_150px_120px_130px] gap-4 px-6 py-4 border-b border-[#E5ECE5] hidden items-center transition last:border-b-0 hover:bg-[#F9FBF7] md:grid"
+              class="grid-cols-[70px_1fr_150px_100px_120px_130px] gap-4 px-6 py-4 border-b border-[#E5ECE5] hidden items-center transition last:border-b-0 hover:bg-[#F9FBF7] md:grid"
             >
 
               <!-- ID -->
@@ -452,6 +443,18 @@ function deleteProduct(product: Product) {
                 >
                   {{ formatCategory(product.category) }}
                 </span>
+              </div>
+
+              <!-- Discount -->
+
+              <div>
+                <span
+                  v-if="product.discount && product.discount > 0"
+                  class="px-3 py-1 rounded-full bg-red-50 text-xs font-semibold text-red-600 inline-flex"
+                >
+                  -{{ product.discount }}%
+                </span>
+                <span v-else class="text-xs text-gray-400">—</span>
               </div>
 
               <!-- Price -->
@@ -535,11 +538,18 @@ function deleteProduct(product: Product) {
 
                   </div>
 
-                  <span
-                    class="mt-2 px-2.5 py-1 rounded-full bg-[#F4F8F1] text-[11px] font-medium text-[#0F3D2E] inline-flex"
-                  >
-                    {{ formatCategory(product.category) }}
-                  </span>
+<span
+                      class="mt-2 px-2.5 py-1 rounded-full bg-[#F4F8F1] text-[11px] font-medium text-[#0F3D2E] inline-flex"
+                    >
+                      {{ formatCategory(product.category) }}
+                    </span>
+
+                    <span
+                      v-if="product.discount && product.discount > 0"
+                      class="mt-2 px-2.5 py-1 rounded-full bg-red-50 text-[11px] font-semibold text-red-600 inline-flex"
+                    >
+                      -{{ product.discount }}%
+                    </span>
 
                 </div>
 

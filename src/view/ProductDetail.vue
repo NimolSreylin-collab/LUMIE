@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
-import { Products } from "../data/Products";
+import { useProductStore } from "../stores/products";
 import { useCartStore } from "../store/Card";
 import { useWishlistStore } from "../store/wishlist";
 import {
@@ -16,17 +16,19 @@ import {
   Minus,
   Plus,
   Sprout,
+  Tag,
 } from "@lucide/vue";
 
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
+const productStore = useProductStore();
 
 const productId = Number(route.params.id);
 
 const product = computed(() => {
-  return Products.find((item) => item.id === productId);
+  return productStore.getProductById(productId);
 });
 
 // Convert image object or array to an array for uniform rendering
@@ -48,6 +50,21 @@ const activeMainImageSrc = computed(() => {
 
 const formattedPrice = computed(() => {
   return product.value ? product.value.price.toFixed(2) : "0.00";
+});
+
+const hasDiscount = computed(() => {
+  return product.value && product.value.discount && product.value.discount > 0;
+});
+
+const discountedPrice = computed(() => {
+  if (!hasDiscount.value || !product.value) return "0.00";
+  const price = product.value.price;
+  const discount = product.value.discount || 0;
+  return (price * (1 - discount / 100)).toFixed(2);
+});
+
+const discountPercentage = computed(() => {
+  return product.value?.discount || 0;
 });
 
 const roundedRating = computed(() => {
@@ -125,14 +142,18 @@ function addToCart() {
     }
   }
 
+  const finalPrice = hasDiscount.value
+    ? product.value.price * (1 - (product.value.discount || 0) / 100)
+    : product.value.price;
+
   const normalizedProduct = {
     id: product.value.id,
     name: product.value.name,
-    price: product.value.price,
+    price: finalPrice,
     category: product.value.category,
     description: product.value.description,
     image: image,
-    discount: 20,
+    discount: product.value.discount || 0,
   };
 
   cartStore.addToCart(normalizedProduct);
@@ -194,6 +215,18 @@ function addToCart() {
           <div
             class="flex-1 overflow-hidden rounded-2xl border border-[#DCE6DC] bg-[#F4F8F1] relative"
           >
+            <!-- Discount Badge on Image -->
+            <div
+              v-if="hasDiscount"
+              class="top-4 left-4 z-10 absolute flex items-center"
+            >
+              <span
+                class="px-3 py-1.5 rounded-full bg-red-500 text-white text-sm font-bold shadow-lg"
+              >
+                -{{ discountPercentage }}%
+              </span>
+            </div>
+
             <!-- Wishlist -->
             <button
               @click="toggleWishlist"
@@ -246,12 +279,36 @@ function addToCart() {
           </div>
 
           <!-- Price -->
-          <p class="mt-5 text-3xl font-bold text-[#0F3D2E]">
-            ${{ formattedPrice }}
-          </p>
+          <div class="mt-5 flex items-baseline gap-3">
+            <span v-if="hasDiscount" class="text-3xl font-bold text-[#0F3D2E]">
+              ${{ discountedPrice }}
+            </span>
+            <span v-else class="text-3xl font-bold text-[#0F3D2E]">
+              ${{ formattedPrice }}
+            </span>
+            <span
+              v-if="hasDiscount"
+              class="text-xl text-gray-400 line-through"
+            >
+              ${{ formattedPrice }}
+            </span>
+            <span
+              v-if="hasDiscount"
+              class="px-2 py-1 rounded-full bg-red-100 text-red-600 text-sm font-semibold"
+            >
+              -{{ discountPercentage }}%
+            </span>
+          </div>
 
           <!-- Badges -->
           <div class="flex-wrap mt-4 gap-2 flex">
+            <span
+              v-if="hasDiscount"
+              class="gap-1.5 px-4 py-1.5 rounded-full bg-red-50 text-sm font-semibold text-red-600 inline-flex items-center"
+            >
+              <Tag class="h-4 w-4" /> {{ discountPercentage }}% OFF
+            </span>
+
             <span
               v-if="product.badge"
               class="gap-1.5 px-4 py-1.5 rounded-full bg-[#F4F8F1] text-sm font-semibold text-[#0F3D2E] inline-flex items-center"

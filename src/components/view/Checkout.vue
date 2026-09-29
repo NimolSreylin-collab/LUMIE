@@ -651,7 +651,7 @@
 
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useOrderStore } from "../../store/orders";
 import { useCartStore } from "../../store/Card";
@@ -700,6 +700,32 @@ function getDiscountedPrice(item: CartItem): number {
 }
 
 
+// ================= USER TYPE =================
+
+interface User {
+  id?: string | number;
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  postalCode?: string;
+}
+
+// Get current user
+function getCurrentUser(): User | null {
+  const storedUser = localStorage.getItem("currentUser") || sessionStorage.getItem("currentUser");
+  if (storedUser) {
+    try {
+      return JSON.parse(storedUser);
+    } catch (e) {
+      console.error("Failed to parse user:", e);
+    }
+  }
+  return null;
+}
+
+
 // ================= FORM =================
 
 const form = ref({
@@ -711,6 +737,19 @@ const form = ref({
   postalCode: "",
   note: "",
   paymentMethod: "cod",
+});
+
+// Auto-fill form from logged-in user
+onMounted(() => {
+  const user = getCurrentUser();
+  if (user) {
+    form.value.fullName = user.name || "";
+    form.value.email = user.email || "";
+    form.value.phone = user.phone || "";
+    form.value.address = user.address || "";
+    form.value.city = user.city || "";
+    form.value.postalCode = user.postalCode || "";
+  }
 });
 
 

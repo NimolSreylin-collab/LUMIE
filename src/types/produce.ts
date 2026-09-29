@@ -48,6 +48,7 @@ export interface Product {
   reviews: number;
   tag?: string;
   isNew?: boolean;
+  discount?: number;
 
   images?: Gallery;
 
