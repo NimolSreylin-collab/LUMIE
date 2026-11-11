@@ -270,12 +270,12 @@
               {{ currentUser?.name?.charAt(0).toUpperCase() || "U" }}
             </div>
 
-            <!-- User Name -->
-            <span class="mt-1 max-w-[90px] truncate text-xs font-medium">
-              {{ currentUser?.name || "Profile" }}
-            </span>
-          </router-link>
-        </div>
+          <!-- User Name -->
+          <!-- <span class="mt-1 max-w-[90px] text-xs font-medium truncate">
+            {{ currentUser?.name || "Profile" }}
+          </span> -->
+        </router-link>
+      </div>
         
         <!-- Wishlist -->
         <router-link
