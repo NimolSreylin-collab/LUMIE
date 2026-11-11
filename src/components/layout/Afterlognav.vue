@@ -258,24 +258,24 @@
         <!-- Profile -->
          <!-- ================= PROFILE ================= -->
               <!-- ================= PROFILE ================= -->
-      <div class="hidden lg:flex">
-        <router-link
-          to="/profile"
-          class="flex-col px-3 py-1.5 justify-center rounded-2xl text-[#0F3D2E] flex items-center transition hover:bg-[#F4F8F1]"
-        >
-          <!-- Profile Circle -->
-          <div
-            class="h-10 w-10 justify-center rounded-full bg-[#0F3D2E] text-sm font-semibold text-white flex items-center"
+     <div class="hidden shrink-0 items-center lg:flex">
+          <router-link
+            to="/profile"
+            class="relative top-3 flex flex-col items-center justify-center rounded-2xl px-2 py-1.5 text-[#0F3D2E] transition hover:bg-[#F4F8F1]"
           >
-            {{ currentUser?.name?.charAt(0).toUpperCase() || "U" }}
-          </div>
+            <!-- Profile Circle -->
+            <div
+              class="h-10 w-10 justify-center rounded-full bg-[#0F3D2E] text-sm font-semibold text-white flex items-center"
+            >
+              {{ currentUser?.name?.charAt(0).toUpperCase() || "U" }}
+            </div>
 
-          <!-- User Name -->
-          <span class="mt-1 max-w-[90px] text-xs font-medium truncate">
-            {{ currentUser?.name || "Profile" }}
-          </span>
-        </router-link>
-      </div>
+            <!-- User Name -->
+            <span class="mt-1 max-w-[90px] truncate text-xs font-medium">
+              {{ currentUser?.name || "Profile" }}
+            </span>
+          </router-link>
+        </div>
         
         <!-- Wishlist -->
         <router-link

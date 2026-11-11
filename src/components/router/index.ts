@@ -17,7 +17,7 @@ import Setting from "../view/Setting.vue";
 import ProductCart from "../../view/ProductCart.vue";
 import ProductDetail from "../../view/ProductDetail.vue";
 
-import AdminLayout from "../layout/AdminLayout.vue";
+// import AdminLayout from "../layout/AdminLayout.vue";
 import AdminProfile from "../admin/AdminProfile.vue";
 import AdminDashboard from "../admin/AdminDashboard.vue";
 import Adminorder from "../admin/Adminorder.vue";
@@ -35,6 +35,7 @@ import AllFeedback from "../AllFeedback.vue";
 import Checkout from "../view/Checkout.vue";
 
 import Editprofile from "../view/Editprofile.vue";
+import AdminLayout from "../admin/AdminLayout.vue";
 
 const routes = [
   {

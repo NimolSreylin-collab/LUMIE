@@ -125,107 +125,12 @@
             />
           </div>
 
-          <!-- Phone -->
-          <div class="sm:col-span-2">
-            <label
-              for="phone"
-              class="mb-2 text-sm font-medium text-[#0F3D2E] block"
-            >
-              Phone Number
-            </label>
-
-            <input
-              id="phone"
-              v-model="form.phone"
-              type="tel"
-              placeholder="Enter your phone number"
-              class="px-4 py-3 w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] text-sm text-[#0F3D2E] outline-none transition placeholder:text-gray-400 focus:border-[#7A9E7E] focus:bg-white focus:ring-2 focus:ring-[#A8C3A0]/30"
-            />
-          </div>
+         
 
         </div>
       </section>
 
-      <!-- ================= SHIPPING ADDRESS ================= -->
-      <section
-        class="mb-6 p-6 rounded-3xl border border-[#DCE6DC] bg-white shadow-sm sm:p-8"
-      >
-        <!-- Header -->
-        <div class="mb-7">
-          <p
-            class="text-xs font-semibold text-[#7A9E7E] uppercase tracking-wider"
-          >
-            Shipping
-          </p>
-
-          <h2 class="mt-1 text-2xl font-bold text-[#0F3D2E]">
-            Default Shipping Address
-          </h2>
-
-          <p class="mt-2 text-sm text-gray-500">
-            This address will be used for faster checkout.
-          </p>
-        </div>
-
-        <!-- Form -->
-        <div class="grid gap-6 sm:grid-cols-2">
-
-          <!-- Street Address -->
-          <div class="sm:col-span-2">
-            <label
-              for="address"
-              class="mb-2 text-sm font-medium text-[#0F3D2E] block"
-            >
-              Street Address
-            </label>
-
-            <input
-              id="address"
-              v-model="form.address"
-              type="text"
-              placeholder="House number, street name"
-              class="px-4 py-3 w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] text-sm text-[#0F3D2E] outline-none transition placeholder:text-gray-400 focus:border-[#7A9E7E] focus:bg-white focus:ring-2 focus:ring-[#A8C3A0]/30"
-            />
-          </div>
-
-          <!-- City -->
-          <div>
-            <label
-              for="city"
-              class="mb-2 text-sm font-medium text-[#0F3D2E] block"
-            >
-              City
-            </label>
-
-            <input
-              id="city"
-              v-model="form.city"
-              type="text"
-              placeholder="City"
-              class="px-4 py-3 w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] text-sm text-[#0F3D2E] outline-none transition placeholder:text-gray-400 focus:border-[#7A9E7E] focus:bg-white focus:ring-2 focus:ring-[#A8C3A0]/30"
-            />
-          </div>
-
-          <!-- Postal Code -->
-          <div>
-            <label
-              for="postalCode"
-              class="mb-2 text-sm font-medium text-[#0F3D2E] block"
-            >
-              Postal Code
-            </label>
-
-            <input
-              id="postalCode"
-              v-model="form.postalCode"
-              type="text"
-              placeholder="Postal code"
-              class="px-4 py-3 w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] text-sm text-[#0F3D2E] outline-none transition placeholder:text-gray-400 focus:border-[#7A9E7E] focus:bg-white focus:ring-2 focus:ring-[#A8C3A0]/30"
-            />
-          </div>
-
-        </div>
-      </section>
+      
 
       <!-- ================= CHANGE PASSWORD ================= -->
       <section
@@ -272,8 +177,8 @@
               @click="showCurrentPassword = !showCurrentPassword"
               class="top-1/2 text-[#64756B] absolute right-3 -translate-y-1/2 transition hover:text-[#0F3D2E]"
             >
-              <Eye v-if="showCurrentPassword" class="h-5 w-5" :stroke-width="1.8" />
-              <EyeOff v-else class="h-5 w-5" :stroke-width="1.8" />
+              <EyeOff v-if="showCurrentPassword" class="h-5 w-5" :stroke-width="1.8" />
+              <Eye v-else class="h-5 w-5" :stroke-width="1.8" />
             </button>
             </div>
           </div>
@@ -300,8 +205,8 @@
               @click="showNewPassword = !showNewPassword"
               class="top-1/2 text-[#64756B] absolute right-3 -translate-y-1/2 transition hover:text-[#0F3D2E]"
             >
-              <Eye v-if="showNewPassword" class="h-5 w-5" :stroke-width="1.8" />
-              <EyeOff v-else class="h-5 w-5" :stroke-width="1.8" />
+              <EyeOff v-if="showNewPassword" class="h-5 w-5" :stroke-width="1.8" />
+              <Eye v-else class="h-5 w-5" :stroke-width="1.8" />
             </button>
             </div>
           </div>
@@ -328,8 +233,8 @@
               @click="showConfirmPassword = !showConfirmPassword"
               class="top-1/2 text-[#64756B] absolute right-3 -translate-y-1/2 transition hover:text-[#0F3D2E]"
             >
-              <Eye v-if="showConfirmPassword" class="h-5 w-5" :stroke-width="1.8" />
-              <EyeOff v-else class="h-5 w-5" :stroke-width="1.8" />
+              <EyeOff v-if="showConfirmPassword" class="h-5 w-5" :stroke-width="1.8" />
+              <Eye v-else class="h-5 w-5" :stroke-width="1.8" />
             </button>
             </div>
           </div>

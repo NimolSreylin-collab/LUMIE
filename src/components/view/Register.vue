@@ -112,8 +112,8 @@
             @click="showPassword = !showPassword"
             class="top-1/2 text-[#64756B] absolute right-3 -translate-y-1/2 transition hover:text-[#0F3D2E]"
           >
-            <Eye v-if="showPassword" class="h-5 w-5" :stroke-width="1.8" />
-            <EyeOff v-else class="h-5 w-5" :stroke-width="1.8" />
+            <EyeOff v-if="showPassword" class="h-5 w-5" :stroke-width="1.8" />
+            <Eye v-else class="h-5 w-5" :stroke-width="1.8" />
           </button>
           </div>
         </div>
@@ -142,8 +142,8 @@
             @click="showConfirmPassword = !showConfirmPassword"
             class="top-1/2 text-[#64756B] absolute right-3 -translate-y-1/2 transition hover:text-[#0F3D2E]"
           >
-            <Eye v-if="showConfirmPassword" class="h-5 w-5" :stroke-width="1.8" />
-            <EyeOff v-else class="h-5 w-5" :stroke-width="1.8" />
+            <EyeOff v-if="showConfirmPassword" class="h-5 w-5" :stroke-width="1.8" />
+            <Eye v-else class="h-5 w-5" :stroke-width="1.8" />
           </button>
           </div>
         </div>
