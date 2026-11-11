@@ -271,9 +271,9 @@
           </div>
 
           <!-- User Name -->
-          <span class="mt-1 max-w-[90px] text-xs font-medium truncate">
+          <!-- <span class="mt-1 max-w-[90px] text-xs font-medium truncate">
             {{ currentUser?.name || "Profile" }}
-          </span>
+          </span> -->
         </router-link>
       </div>
         
