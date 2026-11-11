@@ -168,46 +168,45 @@
         Fill in the form and we’ll get back to you soon.
       </p>
 
-      <form
-        class="mt-8 space-y-5"
-        @submit.prevent="submitForm"
-      >
+      <form class="mt-8 space-y-5" @submit.prevent="submitForm">
 
-        <!-- Name -->
-        <div>
-          <label
-            for="name"
-            class="mb-2 block text-sm font-medium"
-          >
-            Full Name
-          </label>
+        <!-- Authenticated account details -->
+        <template v-if="currentUser">
+          <div>
+            <label for="account-name" class="mb-2 block text-sm font-medium">Full Name</label>
+            <input id="account-name" :value="currentUser.name || ''" type="text" readonly
+              class="w-full cursor-not-allowed rounded-xl border border-[#DCE6DC] bg-[#F4F8F1] px-4 py-3 text-sm text-[#52705D] outline-none" />
+          </div>
 
-          <input
-            id="name"
-            v-model="form.name"
-            type="text"
-            placeholder="Your name"
-            class="w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] px-4 py-3 text-sm outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]/30"
-          />
-        </div>
+          <!-- <div>
+            <label for="account-id" class="mb-2 block text-sm font-medium">User ID</label>
+            <input id="account-id" :value="currentUser.id ?? ''" type="text" readonly
+              class="w-full cursor-not-allowed rounded-xl border border-[#DCE6DC] bg-[#F4F8F1] px-4 py-3 text-sm text-[#52705D] outline-none" />
+          </div> -->
 
-        <!-- Email -->
-        <div>
-          <label
-            for="email"
-            class="mb-2 block text-sm font-medium"
-          >
-            Email Address
-          </label>
+          <div>
+            <label for="account-email" class="mb-2 block text-sm font-medium">Email Address</label>
+            <input id="account-email" :value="currentUser.email || ''" type="email" readonly
+              class="w-full cursor-not-allowed rounded-xl border border-[#DCE6DC] bg-[#F4F8F1] px-4 py-3 text-sm text-[#52705D] outline-none" />
+          </div>
+        </template>
 
-          <input
-            id="email"
-            v-model="form.email"
-            type="email"
-            placeholder="you@example.com"
-            class="w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] px-4 py-3 text-sm outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]/30"
-          />
-        </div>
+        <!-- Guest contact details -->
+        <template v-else>
+          <div>
+            <label for="name" class="mb-2 block text-sm font-medium">Full Name</label>
+            <input id="name" v-model.trim="form.name" type="text" autocomplete="name" required maxlength="100"
+              placeholder="Your name"
+              class="w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] px-4 py-3 text-sm outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]/30" />
+          </div>
+
+          <div>
+            <label for="email" class="mb-2 block text-sm font-medium">Email Address</label>
+            <input id="email" v-model.trim="form.email" type="email" autocomplete="email" required maxlength="254"
+              placeholder="you@example.com"
+              class="w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] px-4 py-3 text-sm outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]/30" />
+          </div>
+        </template>
 
         <!-- Subject -->
         <div>
@@ -222,6 +221,8 @@
             id="subject"
             v-model="form.subject"
             type="text"
+            required
+            maxlength="150"
             placeholder="How can we help?"
             class="w-full rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] px-4 py-3 text-sm outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]/30"
           />
@@ -240,17 +241,29 @@
             id="message"
             v-model="form.message"
             rows="5"
+            required
+            minlength="10"
+            maxlength="5000"
             placeholder="Write your message..."
             class="w-full resize-none rounded-xl border border-[#DCE6DC] bg-[#F9FBF7] px-4 py-3 text-sm outline-none transition focus:border-[#7A9E7E] focus:ring-2 focus:ring-[#A8C3A0]/30"
           ></textarea>
         </div>
 
         <!-- Button -->
+        <p v-if="formError" role="alert" class="text-sm font-medium text-red-700">
+          {{ formError }}
+        </p>
+
+        <p class="text-xs text-[#52705D]">
+          Demo mode: submissions are saved in this browser and are not delivered to support.
+        </p>
+
         <button
           type="submit"
-          class="w-full rounded-xl bg-[#0F3D2E] px-6 py-3.5 font-semibold text-white transition hover:bg-[#174A3A]"
+          :disabled="isSubmitting"
+          class="w-full rounded-xl bg-[#0F3D2E] px-6 py-3.5 font-semibold text-white transition hover:bg-[#174A3A] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Send Message
+          {{ isSubmitting ? "Saving..." : "Send Message" }}
         </button>
 
 
@@ -276,15 +289,25 @@
       v-if="showToast"
       class="fixed top-6 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-[#0F3D2E] px-6 py-3 text-sm font-medium text-white shadow-lg"
     >
-      Thank you! Your message has been sent.
+      {{ toastMessage }}
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 
 const showToast = ref(false);
+const toastMessage = ref("");
+const formError = ref("");
+const isSubmitting = ref(false);
+const currentUser = ref<CurrentUser | null>(null);
+
+interface CurrentUser {
+  id?: string | number;
+  name?: string;
+  email?: string;
+}
 
 const form = reactive({
   name: "",
@@ -293,17 +316,49 @@ const form = reactive({
   message: "",
 });
 
-const submitForm = () => {
-  showToast.value = true;
+onMounted(() => {
+  try {
+    const storedUser = localStorage.getItem("currentUser") || sessionStorage.getItem("currentUser");
+    currentUser.value = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error("Could not read the saved user session:", error);
+    currentUser.value = null;
+  }
+});
 
-  form.name = "";
-  form.email = "";
-  form.subject = "";
-  form.message = "";
+const submitForm = async () => {
+  formError.value = "";
+  isSubmitting.value = true;
 
-  setTimeout(() => {
-    showToast.value = false;
-  }, 3000);
+  try {
+    const message = {
+      id: Date.now(),
+      userId: currentUser.value?.id ?? null,
+      name: currentUser.value?.name || form.name.trim(),
+      email: currentUser.value?.email || form.email.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+      createdAt: new Date().toISOString(),
+    };
+
+    const savedMessages = JSON.parse(localStorage.getItem("contactMessages") || "[]");
+    if (!Array.isArray(savedMessages)) throw new Error("Saved contact messages have an invalid format.");
+    savedMessages.push(message);
+    localStorage.setItem("contactMessages", JSON.stringify(savedMessages));
+
+    toastMessage.value = "Message saved in this browser (demo only).";
+    showToast.value = true;
+    form.name = "";
+    form.email = "";
+    form.subject = "";
+    form.message = "";
+    window.setTimeout(() => { showToast.value = false; }, 3500);
+  } catch (error) {
+    console.error("Could not save the contact message:", error);
+    formError.value = "We couldn't save your message. Please try again.";
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 </script>

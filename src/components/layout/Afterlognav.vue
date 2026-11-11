@@ -261,7 +261,7 @@
      <div class="hidden shrink-0 items-center lg:flex">
           <router-link
             to="/profile"
-            class="relative top-3 flex flex-col items-center justify-center rounded-2xl px-2 py-1.5 text-[#0F3D2E] transition hover:bg-[#F4F8F1]"
+            class="relative top-0 flex flex-col items-center justify-center rounded-2xl px-2 py-1.5 text-[#0F3D2E] transition hover:bg-[#F4F8F1]"
           >
             <!-- Profile Circle -->
             <div
